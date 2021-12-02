@@ -7,6 +7,11 @@ fun main() {
         .map(String::toInt)
 
     println("Part1: ${input.howManyIncreases()}")
+
+    input
+        .windowed(3, 1)
+        .map(List<Int>::sum)
+        .run { println("Part2: ${howManyIncreases()}") }
 }
 
 private fun List<Int>.howManyIncreases() = windowed(2, 1).count { it[1] > it[0] }
