@@ -10,16 +10,17 @@ fun main() {
 
 private data class Ship(
     private val horizontal: Int = 0,
-    private val depth: Int = 0
+    private val depth: Int = 0,
+    private val aim: Int = 0
 ) {
 
     val result = depth * horizontal
 
     fun parse(input: String) =
         when (input.command) {
-            "forward" -> copy(horizontal = horizontal + input.argument)
-            "up" -> copy(depth = depth - input.argument)
-            "down" -> copy(depth = depth + input.argument)
+            "forward" -> copy(horizontal = horizontal + input.argument, depth = depth + aim * input.argument)
+            "up" -> copy(aim = aim - input.argument)
+            "down" -> copy(aim = aim + input.argument)
             else -> this
         }
 }
