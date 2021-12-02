@@ -12,7 +12,7 @@ fun main() {
     input
         .windowed(3, 1)
         .map(List<Int>::sum)
-        .print()
+        .print(List<Int>::howManyIncreases)
 }
 
 private fun List<Int>.howManyIncreases() = windowed(2, 1).count { it[1] > it[0] }
