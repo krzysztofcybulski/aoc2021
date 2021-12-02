@@ -1,11 +1,12 @@
 package me.kcybulski.aoc2021
 
 import me.kcybulski.aoc2021.utils.lines
+import me.kcybulski.aoc2021.utils.print
 
 fun main() {
     lines("02Dive")
         .fold(Ship(), Ship::parse)
-        .run { println(result) }
+        .print(Ship::result)
 }
 
 private data class Ship(
