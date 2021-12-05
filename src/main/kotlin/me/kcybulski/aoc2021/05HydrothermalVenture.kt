@@ -24,7 +24,7 @@ private data class Wire(
 ) {
     companion object {
 
-        fun of(start: Position, end: Position): Wire? {
+        fun of(start: Position, end: Position): Wire {
             if(start.x == end.x && start.y < end.y)
                 return Wire((start.y..end.y).map { Position(start.x, it) }.toSet())
             else if(start.x == end.x && start.y > end.y)
@@ -33,8 +33,16 @@ private data class Wire(
                 return Wire((start.x..end.x).map { Position(it, start.y) }.toSet())
             else if(start.y == end.y && start.x > end.x)
                 return Wire((end.x..start.x).map { Position(it, start.y) }.toSet())
+            else if(start.x < end.x && start.y < end.y)
+                return Wire((start.x..end.x).zip(start.y..end.y).map { Position(it.first, it.second) }.toSet())
+            else if(start.x > end.x && start.y < end.y)
+                return Wire((start.x downTo end.x).zip(start.y..end.y).map { Position(it.first, it.second) }.toSet())
+            else if(start.x < end.x && start.y > end.y)
+                return Wire((start.x..end.x).zip(start.y downTo end.y).map { Position(it.first, it.second) }.toSet())
+            else if(start.x > end.x && start.y > end.y)
+                return Wire((start.x downTo end.x).zip(start.y downTo end.y).map { Position(it.first, it.second) }.toSet())
             else
-                return null
+                throw IllegalStateException()
         }
 
     }
