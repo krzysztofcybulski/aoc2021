@@ -8,32 +8,47 @@ class SyntaxScoring() {
 }
 
 fun main() {
-    lines("10SyntaxScoring")
-        .mapNotNull { firstIllegal(it) }
-        .map { it.points() }
-        .sum()
+    val scores = lines("10SyntaxScoring")
+        .mapNotNull(::complete)
+        .map(String::completeScore)
+
+    // 5
+    scores.size.print()
+    scores.sorted().print()
+
+    scores
+        .sorted()[scores.size / 2]
         .print()
 }
 
-private fun firstIllegal(line: String): Char? {
+private fun complete(line: String): String? {
     val stack = Stack<Int>()
     for (char in line.chars()) {
         if (char in starting)
             stack.push(char)
-        else if (!stack.pop().isOpeningTo(char))
-            return char.toChar()
+        else if (startingToClosing[stack.pop().toChar()] != char.toChar())
+            return null
     }
-    return null
+    return stack.map { startingToClosing[it.toChar()] }
+        .joinToString("")
+        .reversed()
 }
 
-private fun Int.isOpeningTo(closing: Int) = this == closing - 1 || this == closing - 2
+private fun String.completeScore(): Long = fold(0) { acc, c -> acc * 5 + c.points() }
 
 private fun Char.points() = when (this) {
-    ')' -> 3
-    ']' -> 57
-    '}' -> 1197
-    '>' -> 25137
-    else -> 0
+    ')' -> 1L
+    ']' -> 2L
+    '}' -> 3L
+    '>' -> 4L
+    else -> 0L
 }
+
+private val startingToClosing = mapOf(
+    '(' to ')',
+    '[' to ']',
+    '<' to '>',
+    '{' to '}'
+)
 
 private val starting = setOf('(', '[', '<', '{').map(Char::code)
