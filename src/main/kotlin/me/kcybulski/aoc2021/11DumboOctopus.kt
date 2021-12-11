@@ -7,7 +7,7 @@ fun main() {
     val cavern = lines("11DumboOctopus")
         .map { row -> row.map { DumboOctopus(it.digitToInt()) } }
         .let { Cavern(it) }
-    (0..99).fold(cavern) { c, _ -> c.increase().flashAll() }
+    (0..3000).fold(cavern) { c, _ -> c.increase().flashAll() }
         .flashed
         .print()
 }
@@ -49,8 +49,11 @@ data class Cavern(val map: List<List<DumboOctopus>>, val flashed: Int = 0) {
             }
             .filter { it.isNotEmpty() }
             .flatten()
+        if(positions.size == 100) {
+            flashed.print()
+        }
         return onPositions(positions) { it.zero() }
-            .copy(flashed = flashed + positions.size)
+            .copy(flashed = flashed + 1)
     }
 
     private fun flash(positions: List<Pair<Int, Int>>): Cavern =
