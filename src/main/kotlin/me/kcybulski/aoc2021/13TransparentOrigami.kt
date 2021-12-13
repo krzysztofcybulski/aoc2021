@@ -47,6 +47,7 @@ fun main() {
         .map { it.dropWhile { it !in listOf('x', 'y') } }
 
     folds.take(1).fold(paper).positions.size.print()
+    folds.fold(paper).print()
 }
 
 private fun List<String>.fold(paper: Paper) = fold(paper) { p, fold ->
