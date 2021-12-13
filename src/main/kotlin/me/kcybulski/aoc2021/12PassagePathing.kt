@@ -35,8 +35,11 @@ fun main() {
             connected[0].connected += connected[1].name
             connected[1].connected += connected[0].name
         }
+
+    caves.forEach { it.connected -= "start" }
+
     val paths = paths(caves)
-//    paths.map { it.map(Cave::name).print() }
+    paths.map { it.map(Cave::name).joinToString(",").print() }
     paths.size.print()
 }
 
@@ -48,17 +51,23 @@ private fun allPaths(
     caves: Set<Cave>,
     current: Cave,
     path: List<Cave> = listOf(current),
-    visited: Set<Cave> = setOf(current),
+    visited: List<Cave> = listOf(current),
     allPaths: Set<List<Cave>> = emptySet()
 ): Set<List<Cave>> {
     if(path.isEmpty()) {
         return allPaths
     }
     if (current.name.lowercase() == "end") {
-        return allPaths(caves, current, emptyList(), emptySet(), allPaths.plusElement(path))
+        return allPaths(caves, current, emptyList(), emptyList(), allPaths.plusElement(path))
     }
+    val wasSmallVisitedTwice = visited
+        .filterIsInstance<SmallCave>()
+        .groupingBy { it.name }
+        .eachCount()
+        .containsValue(2)
+
     return current.connected
-        .filter { it !in visited.map(Cave::name) || it.uppercase() == it }
+        .filter { it.uppercase() == it || !wasSmallVisitedTwice || it !in visited.map(Cave::name) }
         .flatMap {
             val cave = caves.find { c -> c.name == it }!!
             allPaths(
